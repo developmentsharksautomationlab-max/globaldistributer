@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# scratch / reference files from development
+debug.log
+dpm-page.html
+dpm-formatted.html
