@@ -1,7 +1,28 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About Us" },
+  { href: "/catalogs", label: "Catalogs" },
+  { href: "/our-brands", label: "Our Brands" },
+  { href: "/discount-retailers", label: "Discount Retailers" },
+  { href: "/online-resellers", label: "Online Resellers" },
+  { href: "/wholesale-portal", label: "Wholesale Portal" },
+] as const;
 
 export function Header() {
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-stone-200/80 bg-white/85 shadow-sm shadow-stone-900/5 backdrop-blur-xl">
       <div
@@ -100,8 +121,47 @@ export function Header() {
               </button>
             </a>
           </div>
+          <button
+            type="button"
+            className="flex h-10 w-10 items-center justify-center rounded-full text-stone-700 transition-colors hover:bg-stone-100 lg:hidden"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? (
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            )}
+          </button>
         </div>
       </div>
+
+      {open && (
+        <div className="border-t border-stone-200/80 bg-white lg:hidden">
+          <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-3 text-sm font-medium">
+            {navLinks.map((l) => (
+              <Link
+                key={l.href}
+                className="rounded-xl px-3.5 py-2.5 text-stone-700 transition-colors hover:bg-teal-50/80 hover:text-teal-800"
+                href={l.href}
+              >
+                {l.label}
+              </Link>
+            ))}
+            <a
+              className="mt-2 flex h-11 items-center justify-center rounded-full bg-gradient-to-r from-teal-500 via-teal-600 to-violet-600 text-sm font-semibold text-white"
+              href="mailto:info@globaldistributer.com"
+            >
+              Contact Us
+            </a>
+          </nav>
+        </div>
+      )}
     </header>
   );
 }
