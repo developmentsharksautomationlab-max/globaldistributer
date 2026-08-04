@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { dpmUrl } from "@/lib/dpmCdn";
 import { CategoryPillRow } from "./CategoryPillRow";
 import { Reveal } from "./Reveal";
 
@@ -10,20 +9,15 @@ export function HeroWithPills() {
     <>
       <section className="section-hero-dark relative overflow-hidden py-14 md:py-20">
         <div className="relative z-10 mx-auto max-w-7xl px-4">
-          <Reveal className="mb-6 flex justify-center md:mb-8">
-            <p className="card-glass inline-flex items-center rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-teal-200 md:text-[13px]">
-              US America&apos;s wholesale hub since 1997
-            </p>
-          </Reveal>
           <Reveal y={36} delay={0.1} className="mb-8 text-center md:mb-12">
             <h1 className="font-display mx-auto max-w-5xl px-4 text-2xl font-semibold leading-tight tracking-tight text-white md:text-4xl lg:text-5xl">
               Connect{" "}
               <span className="mx-1 inline-block md:mx-2">
                 <Image
                   alt="Business person"
-                  className="glow-teal inline-block rounded-full ring-2 ring-teal-300/40 md:h-[60px] md:w-[60px]"
+                  className="glow-teal inline-block rounded-full object-cover ring-2 ring-teal-300/40 md:h-[60px] md:w-[60px]"
                   height={40}
-                  src={dpmUrl("/hero-1.png")}
+                  src="/hero-person-1.jpg"
                   width={40}
                   priority
                 />
@@ -34,10 +28,10 @@ export function HeroWithPills() {
               <span className="text-gradient-teal">products</span>{" "}
               <span className="mx-1 inline-block md:mx-2">
                 <Image
-                  alt="Product showcase"
-                  className="glow-violet inline-block rounded-full ring-2 ring-violet-300/40 md:h-[100px] md:w-[100px]"
+                  alt="Wholesale reseller"
+                  className="glow-violet inline-block rounded-full object-cover ring-2 ring-violet-300/40 md:h-[100px] md:w-[100px]"
                   height={60}
-                  src={dpmUrl("/hero-2.png")}
+                  src="/hero-person-2.jpg"
                   width={60}
                   priority
                 />
