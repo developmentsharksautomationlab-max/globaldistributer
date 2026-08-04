@@ -6,8 +6,8 @@ function DesktopItem({ name }: { name: string }) {
   return (
     <div className="group flex flex-row items-center gap-4 rounded-xl border border-slate-200/70 bg-white p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-teal-300/60 hover:shadow-lg hover:shadow-teal-900/10">
       <GridCategoryIcon />
-      <div className="flex-1">
-        <p className="mb-1 truncate text-base font-medium text-gray-900">{name}</p>
+      <div className="min-w-0 flex-1">
+        <p className="mb-1 text-base font-medium leading-snug text-gray-900">{name}</p>
         <p className="text-sm text-gray-500">+120k products</p>
       </div>
     </div>
@@ -51,7 +51,7 @@ export function WholesaleGridBlock() {
         stagger={0.02}
         y={16}
         duration={0.5}
-        className="hidden gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+        className="hidden gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"
       >
         {a.map((name) => (
           <DesktopItem key={name} name={name} />
