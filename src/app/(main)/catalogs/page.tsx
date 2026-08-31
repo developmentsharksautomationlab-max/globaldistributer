@@ -140,12 +140,12 @@ export default function CatalogsPage() {
             >
               Browse All Catalogs
             </Link>
-            <a
+            <Link
               className="rounded-md border border-gray-200 px-5 py-2.5 text-sm font-semibold text-gray-800 hover:bg-gray-50"
-              href="mailto:info@globaldistributer.com"
+              href="/contact"
             >
               Contact Sales
-            </a>
+            </Link>
           </div>
         </div>
       </section>

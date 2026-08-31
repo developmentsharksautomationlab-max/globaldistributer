@@ -1,5 +1,6 @@
 import { BrandsSection } from "@/components/replica/BrandsSection";
 import { BuyersSourcingBlock } from "@/components/replica/BuyersSourcingBlock";
+import { ContactSection } from "@/components/replica/ContactSection";
 import { HeroWithPills } from "@/components/replica/HeroWithPills";
 import { ResellerSliders } from "@/components/replica/ResellerSliders";
 import { ServicesBlock } from "@/components/replica/ServicesBlock";
@@ -14,6 +15,7 @@ export default function HomePage() {
       <ResellerSliders />
       <WholesaleGridBlock />
       <BuyersSourcingBlock />
+      <ContactSection />
     </>
   );
 }

@@ -133,3 +133,56 @@ body {
 .animate-dpm-scroll-mobile:hover {
   animation-play-state: paused;
 }
+
+/* Contact form: submit-confirmation animations */
+@keyframes cf-check {
+  from {
+    stroke-dashoffset: 26;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.cf-check-path {
+  stroke-dasharray: 26;
+  stroke-dashoffset: 26;
+  animation: cf-check 0.45s cubic-bezier(0.65, 0, 0.35, 1) 0.05s forwards;
+}
+
+@keyframes cf-pop {
+  0% {
+    transform: scale(0.9);
+  }
+  55% {
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes cf-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cf-rise {
+  animation: cf-rise 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cf-check-path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .cf-rise {
+    animation: none;
+  }
+}

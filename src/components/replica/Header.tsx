@@ -112,14 +112,12 @@ export function Header() {
             </Link>
           </nav>
           <div className="hidden items-center gap-3 md:flex">
-            <a href="mailto:info@globaldistributer.com">
-              <button
-                type="button"
-                className="glow-teal inline-flex h-9 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-teal-500 via-teal-600 to-violet-600 px-5 py-2 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:from-teal-400 hover:via-teal-500 hover:to-violet-500"
-              >
-                Contact Us
-              </button>
-            </a>
+            <Link
+              href="/contact"
+              className="glow-teal inline-flex h-9 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-teal-500 via-teal-600 to-violet-600 px-5 py-2 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:from-teal-400 hover:via-teal-500 hover:to-violet-500"
+            >
+              Contact Us
+            </Link>
           </div>
           <button
             type="button"
@@ -153,12 +151,12 @@ export function Header() {
                 {l.label}
               </Link>
             ))}
-            <a
+            <Link
               className="mt-2 flex h-11 items-center justify-center rounded-full bg-gradient-to-r from-teal-500 via-teal-600 to-violet-600 text-sm font-semibold text-white"
-              href="mailto:info@globaldistributer.com"
+              href="/contact"
             >
               Contact Us
-            </a>
+            </Link>
           </nav>
         </div>
       )}

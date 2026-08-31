@@ -69,14 +69,14 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
-                <a className="transition-colors hover:text-teal-300" href="mailto:info@globaldistributer.com">
+                <Link className="transition-colors hover:text-teal-300" href="/contact">
                   Support
-                </a>
+                </Link>
               </li>
               <li>
-                <a className="transition-colors hover:text-teal-300" href="mailto:info@globaldistributer.com">
+                <Link className="transition-colors hover:text-teal-300" href="/contact">
                   Contact
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -89,9 +89,9 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
-                <a className="transition-colors hover:text-teal-300" href="mailto:info@globaldistributer.com">
+                <Link className="transition-colors hover:text-teal-300" href="/contact">
                   Contact us
-                </a>
+                </Link>
               </li>
               <li>
                 <Link className="transition-colors hover:text-teal-300" href="/privacy">
