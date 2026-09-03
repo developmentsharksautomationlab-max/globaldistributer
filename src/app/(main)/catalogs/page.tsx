@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/replica/PageHero";
 import Link from "next/link";
+import { categories, getProductsForCategory } from "@/data/catalog";
 
 export const metadata: Metadata = {
   title: "Product Catalogs | Global Distributer",
@@ -8,14 +9,12 @@ export const metadata: Metadata = {
     "Explore thousands of products from verified suppliers across various categories. Browse by category and featured supplier catalogs.",
 };
 
-const browse = [
-  { title: "Electronics & Gadgets", count: "2,500+ items", desc: "Latest technology products and electronic accessories" },
-  { title: "Beauty & Cosmetics", count: "1,800+ items", desc: "Premium beauty products and cosmetic supplies" },
-  { title: "Fashion & Apparel", count: "3,200+ items", desc: "Trendy clothing and fashion accessories" },
-  { title: "Home & Garden", count: "1,500+ items", desc: "Home decor, furniture, and garden supplies" },
-  { title: "Health & Wellness", count: "900+ items", desc: "Health supplements and wellness products" },
-  { title: "Sports & Fitness", count: "1,200+ items", desc: "Athletic equipment and fitness accessories" },
-] as const;
+const browse = categories.map((c) => ({
+  title: c.name,
+  slug: c.slug,
+  count: `${getProductsForCategory(c.slug).length} featured · 120k+ in category`,
+  desc: c.description,
+}));
 
 const featured = [
   { badge: "New", name: "Premium Electronics Catalog 2024", by: "TechSource Global", n: 450, tags: ["Smartphones", "Laptops", "Accessories"] },
@@ -55,10 +54,10 @@ export default function CatalogsPage() {
       <section className="mx-auto max-w-7xl px-4 py-10 md:px-6">
         <h2 className="text-xl font-bold text-gray-900 md:text-2xl">Browse by Category</h2>
         <p className="mt-1 text-gray-600">Discover products across our comprehensive catalog categories</p>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {browse.map((c) => (
             <div
-              key={c.title}
+              key={c.slug}
               className="flex flex-col justify-between rounded-xl border border-gray-200 bg-white p-5 shadow-sm"
             >
               <div>
@@ -68,7 +67,7 @@ export default function CatalogsPage() {
               </div>
               <Link
                 className="mt-4 text-sm font-semibold text-teal-600 hover:underline"
-                href="/"
+                href={`/catalogs/${c.slug}`}
               >
                 Browse Category →
               </Link>
