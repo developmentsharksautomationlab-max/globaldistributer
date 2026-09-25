@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/replica/PageHero";
 import Link from "next/link";
+import { WholesaleSignupForm } from "@/components/replica/WholesaleSignupForm";
 
 export const metadata: Metadata = {
   title: "Wholesale Portal | Global Distributer",
@@ -60,9 +61,9 @@ export default function WholesalePortalPage() {
         <div className="mx-auto flex max-w-2xl flex-wrap justify-center gap-3 px-4">
           <Link
             className="rounded-md bg-teal-600 px-5 py-2.5 text-sm font-semibold text-white"
-            href="#apply"
+            href="/wholesale-portal/signup"
           >
-            Request Access
+            Sign Up for Wholesale Access
           </Link>
         </div>
       </section>
@@ -111,64 +112,9 @@ export default function WholesalePortalPage() {
             )}
           </ul>
           <h3 className="mt-8 text-lg font-bold text-gray-900">Apply for Wholesale Access</h3>
-          <form className="mt-4 space-y-3 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-            <input
-              className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm"
-              name="company"
-              placeholder="Company Name"
-            />
-            <input
-              className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm"
-              name="contact"
-              placeholder="Contact Person"
-            />
-            <input
-              className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm"
-              name="email"
-              placeholder="Email Address"
-              type="email"
-            />
-            <input
-              className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm"
-              name="phone"
-              placeholder="Phone Number"
-            />
-            <div>
-              <label className="text-sm text-gray-700" htmlFor="btype">
-                Business Type
-              </label>
-              <select
-                className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm"
-                id="btype"
-                name="business"
-              >
-                <option value="">Select business type</option>
-                <option>Retailer</option>
-                <option>Distributor</option>
-                <option>E-commerce</option>
-                <option>Marketplace Seller</option>
-                <option>Other</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-sm text-gray-700" htmlFor="vol">
-                Expected Monthly Volume
-              </label>
-              <select className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm" id="vol" name="vol">
-                <option value="">Select volume range</option>
-                <option>$1,000 - $5,000</option>
-                <option>$5,000 - $15,000</option>
-                <option>$15,000 - $50,000</option>
-                <option>$50,000+</option>
-              </select>
-            </div>
-            <button
-              className="w-full rounded-md bg-teal-600 py-2.5 text-sm font-semibold text-white hover:bg-teal-700"
-              type="submit"
-            >
-              Submit Application
-            </button>
-          </form>
+          <div className="mt-4">
+            <WholesaleSignupForm />
+          </div>
         </div>
       </section>
 

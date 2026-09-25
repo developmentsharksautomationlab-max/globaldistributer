@@ -106,7 +106,7 @@ export function Header() {
             </div>
             <Link
               className="ml-1 rounded-full bg-gradient-to-r from-teal-50 to-violet-50 px-4 py-2 font-semibold text-teal-700 ring-1 ring-teal-600/15 transition-all hover:ring-teal-600/30"
-              href="/wholesale-portal"
+              href="/wholesale-portal/signup"
             >
               Wholesale Portal
             </Link>
@@ -152,7 +152,13 @@ export function Header() {
               </Link>
             ))}
             <Link
-              className="mt-2 flex h-11 items-center justify-center rounded-full bg-gradient-to-r from-teal-500 via-teal-600 to-violet-600 text-sm font-semibold text-white"
+              className="mt-2 flex h-11 items-center justify-center rounded-full bg-gradient-to-r from-teal-50 to-violet-50 text-sm font-semibold text-teal-700 ring-1 ring-teal-600/15"
+              href="/wholesale-portal/signup"
+            >
+              Wholesale Sign Up
+            </Link>
+            <Link
+              className="flex h-11 items-center justify-center rounded-full bg-gradient-to-r from-teal-500 via-teal-600 to-violet-600 text-sm font-semibold text-white"
               href="/contact"
             >
               Contact Us
