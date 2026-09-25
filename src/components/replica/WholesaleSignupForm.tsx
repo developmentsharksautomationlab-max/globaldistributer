@@ -66,6 +66,8 @@ export function WholesaleSignupForm() {
         name={FRAME_NAME}
         title="Form submission"
         onLoad={handleFrameLoad}
+        // Sandboxed so nothing loaded here can navigate the visitor's tab away.
+        sandbox=""
         className="hidden"
         aria-hidden
       />
@@ -225,8 +227,11 @@ export function WholesaleSignupForm() {
         </fieldset>
 
         {/* FormSubmit settings */}
-        <input type="hidden" name="_subject" defaultValue="New wholesale sign-up" />
-        <input type="hidden" name="_next" defaultValue="" />
+        {/* No value/defaultValue props: these are filled in handleSubmit, and a
+            React-managed value would be reset by the re-render before the
+            browser submits (an empty _next sends visitors to formsubmit.co). */}
+        <input type="hidden" name="_subject" />
+        <input type="hidden" name="_next" />
         <input type="hidden" name="_template" defaultValue="table" />
         <input type="hidden" name="_captcha" defaultValue="false" />
         {/* Honeypot — hidden from users, catches bots */}
