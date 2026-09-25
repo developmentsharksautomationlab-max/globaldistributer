@@ -2,14 +2,13 @@
 
 import { useState, type FormEvent } from "react";
 
-// Sign-ups are forwarded to this inbox by FormSubmit (https://formsubmit.co) —
-// no account or API key needed. The very first submission sends a one-time
-// "Activate form" email to this address that must be clicked.
+// Sign-ups (including the driver's license attachment) are forwarded to this
+// inbox by FormSubmit (https://formsubmit.co) — no account or API key needed.
+// The very first submission sends a one-time "Activate form" email to this
+// address that must be clicked.
 const SIGNUP_EMAIL = "zynofficiall09@gmail.com";
-
-type SignupState =
-  | { status: "idle" | "pending" }
-  | { status: "success" | "error"; message: string };
+const THANK_YOU_PATH = "/wholesale-portal/signup/thank-you";
+const MAX_FILE_MB = 5;
 
 const fieldClass =
   "w-full rounded-lg border border-stone-300 bg-white px-3.5 py-2.5 text-sm text-stone-900 shadow-sm outline-none transition-colors placeholder:text-stone-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20";
@@ -19,144 +18,123 @@ function Required() {
   return <span className="text-red-500">*</span>;
 }
 
-function SubmitButton({ sent, pending }: { sent: boolean; pending: boolean }) {
-  const base =
-    "glow-teal inline-flex h-11 w-full items-center justify-center gap-2 rounded-full px-6 text-sm font-semibold text-white transition-all";
-  const skin = sent
-    ? "bg-gradient-to-r from-teal-500 to-teal-600 cursor-default"
-    : "bg-gradient-to-r from-teal-500 via-teal-600 to-violet-600 hover:-translate-y-0.5 hover:from-teal-400 hover:via-teal-500 hover:to-violet-500 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0";
-
-  return (
-    <button
-      type="submit"
-      disabled={pending || sent}
-      aria-live="polite"
-      className={`${base} ${skin}`}
-      style={sent ? { animation: "cf-pop 0.4s cubic-bezier(0.16,1,0.3,1)" } : undefined}
-    >
-      {pending ? (
-        <>
-          <span
-            aria-hidden
-            className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
-          />
-          Signing up…
-        </>
-      ) : sent ? (
-        <>
-          <svg
-            aria-hidden
-            className="h-5 w-5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={3}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path className="cf-check-path" d="M20 6 9 17l-5-5" />
-          </svg>
-          Signed up!
-        </>
-      ) : (
-        "Create wholesale account"
-      )}
-    </button>
-  );
-}
-
 export function WholesaleSignupForm() {
-  const [state, setState] = useState<SignupState>({ status: "idle" });
-  const sent = state.status === "success";
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.currentTarget));
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    const form = e.currentTarget;
+    const license = form.elements.namedItem("drivers_license") as HTMLInputElement;
+    const file = license.files?.[0];
 
-    // Honeypot: real users never fill a hidden field. Pretend it worked.
-    if (String(data._honey || "").trim() !== "") {
-      setState({ status: "success", message: "Thanks for signing up! We'll be in touch soon." });
+    if (file && file.size > MAX_FILE_MB * 1024 * 1024) {
+      e.preventDefault();
+      setError(`Driver's license file must be under ${MAX_FILE_MB} MB.`);
       return;
     }
 
-    setState({ status: "pending" });
-    try {
-      const res = await fetch(`https://formsubmit.co/ajax/${SIGNUP_EMAIL}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          ...data,
-          _subject: `New wholesale sign-up: ${data.company} (${data.name})`,
-          _template: "table",
-          _captcha: "false",
-        }),
-      });
-      const json = await res.json().catch(() => null);
-      if (!res.ok || String(json?.success) !== "true") {
-        throw new Error(json?.message || `HTTP ${res.status}`);
-      }
-      setState({ status: "success", message: "Thanks for signing up! We'll be in touch soon." });
-    } catch (err) {
-      console.error("[signup] Failed to submit sign-up:", err);
-      setState({
-        status: "error",
-        message: "Something went wrong submitting your sign-up. Please try again in a moment.",
-      });
-    }
+    const field = (name: string) =>
+      (form.elements.namedItem(name) as HTMLInputElement).value.trim();
+    (form.elements.namedItem("_subject") as HTMLInputElement).value =
+      `New wholesale sign-up: ${field("company")} (${field("name")})`;
+    (form.elements.namedItem("_next") as HTMLInputElement).value =
+      `${window.location.origin}${THANK_YOU_PATH}`;
+
+    // Let the browser submit the form natively so the file is attached.
+    setError(null);
+    setPending(true);
   }
 
   return (
     <form
+      action={`https://formsubmit.co/${SIGNUP_EMAIL}`}
+      method="POST"
+      encType="multipart/form-data"
       onSubmit={handleSubmit}
-      className="space-y-4 rounded-2xl border border-stone-200 bg-white p-5 shadow-sm md:p-6"
+      className="space-y-6 rounded-2xl border border-stone-200 bg-white p-5 shadow-sm md:p-6"
     >
-      {state.status === "success" ? (
-        <p
-          role="status"
-          className="cf-rise flex items-start gap-2 rounded-xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm font-medium text-teal-800"
-        >
-          <svg
-            aria-hidden
-            className="mt-0.5 h-4 w-4 flex-shrink-0 text-teal-600"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={3}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path className="cf-check-path" d="M20 6 9 17l-5-5" />
-          </svg>
-          {state.message}
-        </p>
-      ) : null}
-      {state.status === "error" ? (
+      {error ? (
         <p
           role="alert"
           className="cf-rise rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700"
         >
-          {state.message}
+          {error}
         </p>
       ) : null}
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <label className={labelClass} htmlFor="ws-name">
-            Full name <Required />
-          </label>
-          <input
-            id="ws-name"
-            name="name"
-            required
-            maxLength={200}
-            autoComplete="name"
-            className={fieldClass}
-            placeholder="Your name"
-          />
+      <fieldset className="space-y-4">
+        <legend className="mb-3 text-base font-semibold text-stone-900">
+          Required Information
+        </legend>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className={labelClass} htmlFor="ws-name">
+              Full Name <Required />
+            </label>
+            <input
+              id="ws-name"
+              name="name"
+              required
+              maxLength={200}
+              autoComplete="name"
+              className={fieldClass}
+              placeholder="Your full name"
+            />
+          </div>
+          <div>
+            <label className={labelClass} htmlFor="ws-phone">
+              Phone Number <Required />
+            </label>
+            <input
+              id="ws-phone"
+              name="phone"
+              type="tel"
+              required
+              maxLength={50}
+              autoComplete="tel"
+              className={fieldClass}
+              placeholder="+1 555 000 0000"
+            />
+          </div>
         </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className={labelClass} htmlFor="ws-company">
+              LLC/Company Name <Required />
+            </label>
+            <input
+              id="ws-company"
+              name="company"
+              required
+              maxLength={200}
+              autoComplete="organization"
+              className={fieldClass}
+              placeholder="Your LLC or company name"
+            />
+          </div>
+          <div>
+            <label className={labelClass} htmlFor="ws-ein">
+              EIN Number <Required />
+            </label>
+            <input
+              id="ws-ein"
+              name="ein"
+              required
+              inputMode="numeric"
+              pattern="\d{2}-?\d{7}"
+              title="EIN should be 9 digits, e.g. 12-3456789"
+              maxLength={10}
+              className={fieldClass}
+              placeholder="12-3456789"
+            />
+          </div>
+        </div>
+
         <div>
           <label className={labelClass} htmlFor="ws-email">
-            Email <Required />
+            Active Email Address <Required />
           </label>
           <input
             id="ws-email"
@@ -169,96 +147,64 @@ export function WholesaleSignupForm() {
             placeholder="you@company.com"
           />
         </div>
-      </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className={labelClass} htmlFor="ws-company">
-            Company name <Required />
+          <label className={labelClass} htmlFor="ws-license">
+            Driver&apos;s License <Required />
           </label>
           <input
-            id="ws-company"
-            name="company"
+            id="ws-license"
+            name="drivers_license"
+            type="file"
             required
-            maxLength={200}
-            autoComplete="organization"
-            className={fieldClass}
-            placeholder="Company name"
+            accept="image/*,application/pdf"
+            className={`${fieldClass} file:mr-3 file:rounded-full file:border-0 file:bg-teal-50 file:px-4 file:py-1.5 file:text-sm file:font-semibold file:text-teal-700 hover:file:bg-teal-100`}
           />
+          <p className="mt-1.5 text-xs text-stone-500">
+            Upload a clear photo or scan for verification (image or PDF, max {MAX_FILE_MB} MB).
+          </p>
         </div>
-        <div>
-          <label className={labelClass} htmlFor="ws-phone">
-            Phone <Required />
-          </label>
-          <input
-            id="ws-phone"
-            name="phone"
-            type="tel"
-            required
-            maxLength={200}
-            autoComplete="tel"
-            className={fieldClass}
-            placeholder="+1 555 000 0000"
-          />
+      </fieldset>
+
+      <fieldset className="space-y-4">
+        <legend className="mb-3 text-base font-semibold text-stone-900">
+          Optional Information
+        </legend>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className={labelClass} htmlFor="ws-email2">
+              Secondary Email Address
+            </label>
+            <input
+              id="ws-email2"
+              name="secondary_email"
+              type="email"
+              maxLength={200}
+              className={fieldClass}
+              placeholder="Optional"
+            />
+          </div>
+          <div>
+            <label className={labelClass} htmlFor="ws-phone2">
+              Secondary Phone Number
+            </label>
+            <input
+              id="ws-phone2"
+              name="secondary_phone"
+              type="tel"
+              maxLength={50}
+              className={fieldClass}
+              placeholder="Optional"
+            />
+          </div>
         </div>
-      </div>
+      </fieldset>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <label className={labelClass} htmlFor="ws-business">
-            Business type
-          </label>
-          <select id="ws-business" name="business" className={fieldClass} defaultValue="">
-            <option value="">Select business type</option>
-            <option>Retailer</option>
-            <option>Distributor</option>
-            <option>E-commerce</option>
-            <option>Marketplace Seller</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div>
-          <label className={labelClass} htmlFor="ws-volume">
-            Expected monthly volume
-          </label>
-          <select id="ws-volume" name="volume" className={fieldClass} defaultValue="">
-            <option value="">Select volume range</option>
-            <option>$1,000 - $5,000</option>
-            <option>$5,000 - $15,000</option>
-            <option>$15,000 - $50,000</option>
-            <option>$50,000+</option>
-          </select>
-        </div>
-      </div>
-
-      <div>
-        <label className={labelClass} htmlFor="ws-website">
-          Website
-        </label>
-        <input
-          id="ws-website"
-          name="website"
-          maxLength={200}
-          autoComplete="url"
-          className={fieldClass}
-          placeholder="Optional"
-        />
-      </div>
-
-      <div>
-        <label className={labelClass} htmlFor="ws-notes">
-          Anything else we should know?
-        </label>
-        <textarea
-          id="ws-notes"
-          name="notes"
-          rows={3}
-          maxLength={2000}
-          className={`${fieldClass} resize-y`}
-          placeholder="Optional"
-        />
-      </div>
-
+      {/* FormSubmit settings */}
+      <input type="hidden" name="_subject" defaultValue="New wholesale sign-up" />
+      <input type="hidden" name="_next" defaultValue="" />
+      <input type="hidden" name="_template" defaultValue="table" />
+      <input type="hidden" name="_captcha" defaultValue="false" />
       {/* Honeypot — hidden from users, catches bots */}
       <input
         type="text"
@@ -269,7 +215,24 @@ export function WholesaleSignupForm() {
         className="hidden"
       />
 
-      <SubmitButton sent={sent} pending={state.status === "pending"} />
+      <button
+        type="submit"
+        disabled={pending}
+        aria-live="polite"
+        className="glow-teal inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-teal-500 via-teal-600 to-violet-600 px-6 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:from-teal-400 hover:via-teal-500 hover:to-violet-500 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
+      >
+        {pending ? (
+          <>
+            <span
+              aria-hidden
+              className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
+            />
+            Submitting…
+          </>
+        ) : (
+          "Create wholesale account"
+        )}
+      </button>
       <p className="text-center text-xs text-stone-500">
         We&apos;ll review your details and get back to you shortly.
       </p>
