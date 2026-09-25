@@ -7,9 +7,9 @@ export const metadata: Metadata = {
 };
 
 const next = [
-  "Our team reviews your business details and documents.",
-  "We may reach out if we need anything else.",
-  "Once approved, you'll get an email with your portal access.",
+  "Our team reviews your business details and verification documents.",
+  "If your application is approved, we'll contact you at the email address you provided.",
+  "Please keep an eye on your inbox, including your spam or junk folder.",
 ] as const;
 
 export default function WholesaleSignupThankYouPage() {
@@ -27,8 +27,8 @@ export default function WholesaleSignupThankYouPage() {
             Application received
           </h1>
           <p className="mt-3 text-pretty text-stone-600">
-            Thanks for applying for a wholesale account. We&apos;ll review your details and get back
-            to you shortly.
+            Thank you for applying for a Global Distributer wholesale account. If your application
+            is approved, our team will reach out to you through the email address you provided.
           </p>
 
           <div className="mt-8 rounded-2xl bg-stone-50 p-5 text-left ring-1 ring-stone-200/80">

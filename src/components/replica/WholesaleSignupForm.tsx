@@ -302,7 +302,34 @@ export function WholesaleSignupForm() {
             </div>
           </Section>
 
-          <Section step={3} title="Additional contacts" hint="Optional">
+          <Section step={3} title="Additional information" hint="Optional">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className={labelClass} htmlFor="ws-agency">
+                  Agency You Are Working With
+                </label>
+                <input
+                  id="ws-agency"
+                  name="agency"
+                  maxLength={200}
+                  className={fieldClass}
+                  placeholder="Agency name"
+                />
+              </div>
+              <div>
+                <label className={labelClass} htmlFor="ws-agency-code">
+                  Agency Code
+                </label>
+                <input
+                  id="ws-agency-code"
+                  name="agency_code"
+                  maxLength={100}
+                  autoCapitalize="characters"
+                  className={fieldClass}
+                  placeholder="e.g. AG-1234"
+                />
+              </div>
+            </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label className={labelClass} htmlFor="ws-email2">
